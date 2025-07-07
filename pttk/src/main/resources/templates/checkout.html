@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .cart-item img {
+            width: 100px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .item-details {
+            flex-grow: 1;
+        }
+
+        .item-name {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-controls button {
+            width: 30px;
+            height: 30px;
+            font-weight: bold;
+        }
+
+        .quantity {
+            width: 40px;
+            text-align: center;
+        }
+
+        .total-price {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .dropdown-list {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" th:onclick="Home()">Logo</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Own Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:onclick="OwnCart()">Own Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Own Order</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="container mt-5">
+        <h4 class="text-center mb-1">User Information</h4>
+        <div class="user-info">
+            <p><strong>Name:</strong> <span id="name" th:text="${user.person.fullName}"></span></p>
+            <p><strong>Date of Birth:</strong> <span id="dob" th:text="${user.person.dob}"></span></p>
+        </div>
+        </br>
+        </br>
+        <div id="cart-items" th:each="item: ${cart.productsList}">
+            <div class="cart-item">
+                <img th:src="${item.product.imagePath}" alt="Product Image">
+                <div class="item-details">
+                    <h3 class="item-name" th:text="${item.product.name}">Product Name</h3>
+                    <p class="item-price" th:text="${item.product.price} + 'đ'">Price: $10.00</p>
+                    <p class="item-price" th:text="${item.quantity}">Price: $10.00</p>
+                </div>
+            </div>
+            <!-- Add more cart items here -->
+        </div>
+        <div class="product-price">
+            <strong>Products Price:</strong> <span id="total-price" th:text="${cart.totalPrice} + 'đ'">0.00</span>
+        </div>
+        <div class="address">
+            <strong>Address:</strong> <span id="address" th:text="${shipment.address}">0.00</span>
+        </div>
+
+        <div class="shipment-method">
+            <strong>Shipment Method:</strong> <span id="shipment-method" th:text="${shipment.type}">0.00</span>
+        </div>
+
+        <div class="shipment-fee">
+            <strong>Shipment Fee:</strong> <span id="shipment-fee" th:text="${shipment.fee} + 'đ'">0.00</span>
+        </div>
+
+        <div class="payment-method">
+            <strong>Payment Method:</strong> <span id="payment-method" th:text="${payment.method}">0.00</span>
+        </div>
+
+        <div class="total-price">
+            <strong>Total Price:</strong> <span id="total-price" th:text="${payment.totalPrice} + 'đ'">0.00</span>
+        </div>
+        </br>
+        <!-- Checkout button -->
+        <button class="btn btn-primary btn-block" id="checkout-button" onclick="Save()">Save</button>
+        <input id="id" th:value=" ${shipment.address.id}" type="hidden">
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        var cusId = localStorage.getItem("id");
+
+        function Home() {
+            window.location.href = '/browse';
+        }
+        function Save() {
+            window.location.href = '/SaveOrder/' + document.getElementById('id').value +
+                '-' + document.getElementById('payment-method').innerHTML +
+                '-' + document.getElementById('shipment-method').innerHTML +
+                '-' + cusId;
+        }
+    </script>
+</body>
+
+</html>

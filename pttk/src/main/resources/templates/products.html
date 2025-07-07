@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Trang thương mại điện tử</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .product-item {
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            /* Make the entire product item hoverable */
+        }
+
+        .product-image {
+            max-height: 200px;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .product-name,
+        .product-price {
+            opacity: 0;
+            /* Initially hide the product name and price */
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .product-item:hover .product-image {
+            transform: scale(1.2);
+        }
+
+        .product-item:hover .product-name,
+        .product-item:hover .product-price {
+            opacity: 1;
+            /* Show the product name and price on hover */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Logo</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Own Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:onclick="OwnCart()">Own Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Own Order</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mt-4">
+        <div class="row flex-wrap">
+            <div class="col-md-4 productt" th:each="product : ${products}">
+                <div class="product-item">
+                    <a href="#" th:href="@{/product/{id} (id = ${product.productid}) }">
+                        <img th:src="${product.imagePath}" alt="Product" class="product-image">
+                    </a>
+                    <h4 class="product-name" th:text="${product.name}">Product Name</h4>
+                    <p class="product-price" th:text=" ${product.price} + 'đ'">Product Price</p>
+                    <a class="btn btn-info" role="button" th:onclick="'AddToCart(' + ${product.productid} + ')'">ADD TO
+                        CART</a>
+                    <a class="btn btn-info" role="button" th:onclick="Buy(${product.productid})">BUY</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input class="id" th:value=" ${id}" type="hidden">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        var cusId = document.querySelector('.id').value;
+        console.log(cusId);
+
+        // Lưu giá trị id vào Local Storage
+        localStorage.setItem("id", cusId);
+
+        const productItems = document.querySelectorAll('.product-item');
+        for (const productItem of productItems) {
+            productItem.addEventListener('mouseenter', () => {
+                productItem.classList.add('is-hovered');
+            });
+
+            productItem.addEventListener('mouseleave', () => {
+                productItem.classList.remove('is-hovered');
+            });
+        }
+
+        function Buy(id) {
+            if (cusId == -1) 
+                window.location.href = '/loginForm';
+            else
+                window.location.href = '/Buy/' + id + '-' + cusId;
+        }
+        function AddToCart(id) {
+            if (cusId == -1) 
+                window.location.href = '/loginForm';
+            else
+                window.location.href = '/AddCart/' + id + '-' + cusId;
+        }
+        function OwnCart(id) {
+            if (cusId == -1) 
+                window.location.href = '/loginForm';
+            else
+                window.location.href = '/Cart/' + cusId;
+        }
+
+    </script>
+</body>
+
+</html>

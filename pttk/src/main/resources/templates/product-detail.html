@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Book Detail</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .book-image {
+            max-width: 200px;
+            margin-right: 20px;
+        }
+
+        .book-details {
+            margin-top: 20px;
+        }
+
+        .price {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .category {
+            margin-bottom: 10px;
+        }
+
+        .description {
+            margin-bottom: 10px;
+        }
+
+        .publication-date {
+            margin-bottom: 10px;
+        }
+
+        .author {
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Logo</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Own Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Own Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Own Order</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <img class="book-image" th:src="${product.imagePath}" alt="Book Image"
+                    style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="col-md-8">
+                <h1 class="name" th:text="${product.name}">Book Name</h1>
+                <div class="price" th:text="'Giá: ' + ${product.price} + 'đ'"></div>
+                <div class="category" th:text="'Category: ' + ${product.category.name}"></div>
+                <div class="description" th:text="${product.decription}">
+                </div>
+                <div class="publication-date"
+                    th:text="'Publication Date: ' + ${#dates.format(product.publicationDate, 'MMMM d, yyyy')}"></div>
+                <div class="author" th:text="'Author: ' + ${product.authorName}"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .cart-item img {
+            width: 100px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .item-details {
+            flex-grow: 1;
+        }
+
+        .item-name {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-controls button {
+            width: 30px;
+            height: 30px;
+            font-weight: bold;
+        }
+
+        .quantity {
+            width: 40px;
+            text-align: center;
+        }
+
+        .total-price {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .dropdown-list {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" th:onclick="Home()">Logo</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Own Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:onclick="OwnCart()">Own Cart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Own Order</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Shopping Cart</h1>
+
+        <div id="cart-items" th:each="item: ${cart.productsList}">
+            <div class="cart-item">
+                <img th:src="${item.product.imagePath}" alt="Product Image">
+                <div class="item-details">
+                    <h3 class="item-name" th:text="${item.product.name}">Product Name</h3>
+                    <p class="item-price" th:text="${item.product.price} + 'đ'">Price: $10.00</p>
+                </div>
+                <div class="quantity-controls">
+                    <button class="btn btn-secondary decrease-quantity"
+                        th:onclick="'ChangeQuantity(' + ${item.id} +','+ ${item.quantity - 1} + ')'">-</button>
+                    <span class="quantity" th:text="${item.quantity}"></span>
+                    <button class="btn btn-secondary decrease-quantity"
+                        th:onclick="'ChangeQuantity(' + ${item.id} +','+ ${item.quantity + 1} + ')'">+</button>
+                </div>
+            </div>
+            <!-- Add more cart items here -->
+        </div>
+
+        <div class="total-price">
+            Products Price: <span id="total-price" th:text="${cart.totalPrice} + 'đ'">0.00</span>
+        </div>
+        <div class="dropdown-list">
+            <label for="address">Address:</label>
+            <select class="form-control" id="address">
+                <option value=""></option> <!-- Tùy chọn trống -->
+                <option th:each="address : ${addresses}" th:value="${address.id}" th:text="${address}"></option>
+            </select>
+        </div>
+        <div class="dropdown-list">
+            <label for="shipment-method">Shipment Method:</label>
+            <select class="form-control" id="shipment-method">
+                <option value=""></option>
+                <option value="fast">Fast</option>
+                <option value="standard">Standard</option>
+            </select>
+        </div>
+
+        <div class="dropdown-list">
+            <label for="payment-method">Payment Method:</label>
+            <select class="form-control" id="payment-method">
+                <option value=""></option>
+                <option value="cash">Cash</option>
+                <option value="banking">Banking</option>
+            </select>
+        </div>
+        </br>
+        <!-- Checkout button -->
+        <button class="btn btn-primary btn-block" id="checkout-button" onclick="CheckOut()">Checkout</button>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        var cusId = localStorage.getItem("id");
+        // Get all quantity controls
+        var quantityControls = document.querySelectorAll('.quantity-controls');
+        function ChangeQuantity(id, quantity) {
+            window.location.href = '/ChangeQuantity/' + cusId + '-' + id + '-' + quantity;
+        }
+        // Attach event listeners to quantity controls
+
+        function Home() {
+            window.location.href = '/browse';
+        }
+        function CheckOut() {
+            window.location.href = '/CheckOut/' + document.getElementById('address').value +
+                '-' + document.getElementById('payment-method').value +
+                '-' + document.getElementById('shipment-method').value +
+                '-' + cusId;
+        }
+    </script>
+</body>
+
+</html>
